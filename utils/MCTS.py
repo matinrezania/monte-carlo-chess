@@ -2,6 +2,7 @@ import numpy as np
 import copy
 import random
 
+
 def get_legal_moves(state):
     """    Returns the list of legal moves from the current board position
     Parameters
@@ -51,7 +52,8 @@ class MCTS_Node():
         next_state = copy.deepcopy(self.state)
         next_state.push(action)
 
-        child_node = MCTS_Node(next_state, color=self.color, parent=self, parent_action=action)
+        child_node = MCTS_Node(next_state, color=self.color,
+                               parent=self, parent_action=action)
         self.children.append(child_node)
 
         return child_node
@@ -93,13 +95,14 @@ class MCTS_Node():
         weights = []
         for child in self.children:
             exploitation = self._reward / self._number_of_visits
-            exploration = c * np.sqrt((2 * np.log(self._number_of_visits) / child._number_of_visits))
+            exploration = c * \
+                np.sqrt((2 * np.log(self._number_of_visits) /
+                        child._number_of_visits))
             ucb = exploration + exploitation
 
             weights.append(ucb)
 
         return self.children[np.argmax(weights)]
-
 
     def simulation_policy(self, possible_moves):
         """
@@ -107,7 +110,6 @@ class MCTS_Node():
         It implements a uniform sampling among possible moves.
         """
         return possible_moves[np.random.randint(len(possible_moves))]
-
 
     def _tree_policy(self):
         """
@@ -121,7 +123,6 @@ class MCTS_Node():
                 current_node = current_node.best_child()
         return current_node
 
-
     def best_action(self, n_simulations, c):
         """
         Select the node corresponding to the best action
@@ -132,4 +133,3 @@ class MCTS_Node():
             v.backpropagate(reward)
 
         return self.best_child(c=c).parent_action
-

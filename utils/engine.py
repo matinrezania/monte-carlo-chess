@@ -3,12 +3,12 @@ class Engine():
         pass
 
     def play(self, board):
-        good_value = False
-        while not good_value:
+        valid_input = False
+        while not valid_input:
             move = input('move:')
             try:
                 move = board.parse_san(move)
-                good_value = True
+                valid_input = True
             except ValueError:
                 print(f'{move} is not a valid move.')
                 continue
