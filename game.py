@@ -1,8 +1,13 @@
 import chess.engine
-from utils import *
 import datetime
 import chess
 import time
+
+from utils.saver import *
+from utils.engine import *
+from utils.player import *
+from utils.MCTS import *
+from utils.eval_funcs import *
 
 
 def game():
@@ -13,7 +18,7 @@ def game():
     game.headers['Event'] = 'Example'
     game.headers['Date'] = datetime.datetime.today().strftime(
         '%Y-%m-%d-%H:%M:%S')
-    gameplay_time = 10
+    gameplay_time = 30
 
     # uncomment the following line and comment the line after that to both sides would be AI
     white = Player('white')
@@ -76,10 +81,17 @@ def game():
     else:
         engine.quit()
 
-    if game.headers["Result"] == '1/2-1/2':
+    winner = total_evaluation(board)
+
+    if winner == 'Draw':
+        print('Draw!')
+    else:
+        print(f'Winner: {winner}')
+
+    '''if game.headers["Result"] == '1/2-1/2':
         print('Draw')
     else:
-        print(f'The winner is {game.headers["Result"]}')
+        print(f'The winner is {game.headers["Result"]}')'''
 
     game_duration = time.time() - start
     print(f'C:{5}, - took {datetime.timedelta(seconds=game_duration)}')
