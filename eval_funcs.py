@@ -1,38 +1,52 @@
-def total_evaluation(board):
+def total_evaluation(board, print_details=False):
     winner = None
     matrixed_board = board_to_matrix(board)
 
 
     piece_numbers = get_pieces_numbers(matrixed_board)
-    print(
-        f"Pieces_numbers: White: {piece_numbers['W']}, Black: {piece_numbers['B']}")
+    if print_details:
+        print(
+            f"Pieces_numbers: White: {piece_numbers['W']}, Black: {piece_numbers['B']}")
 
     piece_values = get_piece_values(matrixed_board)
-    print(
-        f"Piece_values: White: {piece_values['W']}, Black: {piece_values['B']}")
+    if print_details:
+        print(
+            f"Piece_values: White: {piece_values['W']}, Black: {piece_values['B']}")
 
     kings_endangered = get_kings_safety(board, matrixed_board)
-    print(
-        f"Kings endanger by number of pieces: White: {kings_endangered['W']}, Black: {kings_endangered['B']}")
+    if print_details:
+        print(
+            f"Kings endanger by number of pieces: White: {kings_endangered['W']}, Black: {kings_endangered['B']}")
+
+    horizon_effect = get_horizon_effect(matrixed_board)
+    if print_details:
+        print(
+            f"Horizon effect, by number of pawns of eac: White: {horizon_effect['W']}, Black: {horizon_effect['B']}")
 
 
     white_totoal_score = piece_numbers['W'] + \
-        piece_values['W'] + kings_endangered['W']
+        piece_values['W'] - kings_endangered['W']*10 - horizon_effect['W']*10
     black_totoal_score = piece_numbers['B'] + \
-        piece_values['B'] + kings_endangered['B']*10
-    print(
-        f"Total_scores: White: {white_totoal_score}, Black: {black_totoal_score}")
+        piece_values['B'] - kings_endangered['B']*10 - horizon_effect['B']*10
+
+    if print_details:
+        print(
+            f"Total_scores: White: {white_totoal_score}, Black: {black_totoal_score}")
 
 
-    if(white_totoal_score > black_totoal_score):
+    return {"W": white_totoal_score, "B": black_totoal_score}
+
+def get_winner(board):
+    result = total_evaluation(board, print_details=True)
+    white_score = result["W"]
+    black_score = result["B"]
+    if(white_score > black_score):
         winner = 'White'
-    elif (black_totoal_score > white_totoal_score):
+    elif (black_score > white_score):
         winner = 'Black'
     else:
         winner = 'Draw'  # for Draw
     return winner
-
-
 
 def board_to_matrix(board):  # type(board) == chess.Board()
     pgn = board.epd()
@@ -189,3 +203,14 @@ def get_kings_safety(board, matrix):
             black_king_endangered += 1
 
     return{'W': white_king_endangered, 'B': black_king_endangered}
+
+
+def get_horizon_effect(matrix):
+    white_horizon_effect_value = 0
+    black_horizon_effect_value = 0
+    for i in range(8):
+        if(matrix[0][i] == 'p'):
+            white_value = 1
+        elif(matrix[0][i] == 'P'):
+            black_value = 1
+    return{'W': white_horizon_effect_value, 'B': black_horizon_effect_value}

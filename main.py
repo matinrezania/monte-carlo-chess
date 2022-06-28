@@ -83,13 +83,13 @@ def game():
         elif(result == '0-1'):
             winner = 'Black'
         else:
-            winner = total_evaluation(board)
+            winner = get_winner(board)
 
 
     # time's up before finishing game
     else:
         print('Times up!')
-        winner = total_evaluation(board)
+        winner = get_winner(board)
 
 
 

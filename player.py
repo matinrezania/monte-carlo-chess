@@ -2,7 +2,7 @@ from AI import MCTS_Node
 
 
 class Player():
-    def __init__(self, color, engine=None, n_simulations=10, c=0.1):
+    def __init__(self, color, engine=None, n_simulations=10, c=5):
         self.color = color
         self.engine = engine
         self.n_simulations = n_simulations
